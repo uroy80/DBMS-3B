@@ -12,3 +12,13 @@ CREATE DATABASE IF NOT EXISTS tourgrid_copy;
 USE tourgrid_copy;
 
 ```
+
+## -- Create the database
+
+```sql
+CREATE DATABASE IF NOT EXISTS tourgrid_copy;
+
+-- Select the database
+USE tourgrid_copy;
+
+```
