@@ -1,4 +1,6 @@
-# Complete Guide to Creating the tourgrid_copy Database
+# Complete Guide to Creating the [tourgrid_copy] Database
+
+by Usham Roy
 
 This guide provides step-by-step instructions for creating the tourgrid_copy database, including tables, data, views, triggers, stored procedures, and complex queries.
 
