@@ -54,7 +54,7 @@ CREATE TABLE package (
   location_map varchar(255) DEFAULT NULL,
   pictures longtext DEFAULT NULL,
   created_at timestamp NOT NULL DEFAULT current_timestamp(),
-  updated_at timestamp NOT NULL DEFAULT pbcurrent_timestamp() ON UPDATE current_timestamp(),
+  updated_at timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (id),
   UNIQUE KEY package_id (package_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -157,7 +157,7 @@ CREATE TABLE feedback (
 CREATE TABLE contact_details (
   serial int(11) NOT NULL AUTO_INCREMENT,
   name varchar(50) NOT NULL,
-  mail varchar(100) NOT NULL,
+  mail varchar(100) NOT NULL,  -- Changed from varchar(20) to varchar(100)
   phone varchar(15) NOT NULL,
   time varchar(30) NOT NULL,
   purpose varchar(200) NOT NULL,
@@ -190,6 +190,7 @@ CREATE TABLE customer_audit (
 -- Alter payments table to add UPI as a payment method
 ALTER TABLE payments 
 MODIFY COLUMN payment_method ENUM('Credit Card', 'Debit Card', 'PayPal', 'Bank Transfer', 'Cash', 'UPI') NOT NULL;
+
 ```
 
 ## Step 4: Insert Sample Data
@@ -362,7 +363,6 @@ HAVING
 ORDER BY 
     total_bookings DESC, 
     total_spent DESC;
-
 ```
 
 ### 4. Find Available Tours for a Specific Date Range with Discount Information
