@@ -13,9 +13,10 @@ USE tourgrid_copy;
 
 ```
 
-## -- Create the database
+## Step 2: Create Tables
 
 ```sql
+-- Create the database
 CREATE DATABASE IF NOT EXISTS tourgrid_copy;
 
 -- Select the database
