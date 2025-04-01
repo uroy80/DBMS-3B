@@ -2,7 +2,7 @@
 
 # CREATE DATABASE IF NOT EXISTS tourgrid_copy;
 
-USE tourgrid_copy;
+``` USE tourgrid_copy;
 
 CREATE TABLE customers (
 customer_id int(11) NOT NULL AUTO_INCREMENT,
