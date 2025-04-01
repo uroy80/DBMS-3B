@@ -4,8 +4,11 @@ This guide provides step-by-step instructions for creating the tourgrid_copy dat
 
 ## Step 1: Create the Database
 
-``` -- Create the database
+```sql
+-- Create the database
 CREATE DATABASE IF NOT EXISTS tourgrid_copy;
 
 -- Select the database
-USE tourgrid_copy; ```
+USE tourgrid_copy;
+
+```
