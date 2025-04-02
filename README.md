@@ -775,7 +775,7 @@ SHOW TRIGGERS;
 SHOW PROCEDURE STATUS WHERE Db = 'tourgrid_copy';
 ```
 
-## Step 10: Test Triggers and Stored Procedures
+## [OPTIONAL] Test Triggers and Stored Procedures
 
 ```sql
 -- Test update_booking_payment_status trigger
@@ -802,7 +802,7 @@ SELECT booking_id, status FROM bookings WHERE booking_id = 'BK006';
 CALL generate_monthly_revenue_report(2025, 3);
 ```
 
-## Test Triggers
+## [OPTIONAL] Test Triggers
 
 ```sql
 
