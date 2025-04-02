@@ -802,6 +802,13 @@ SELECT booking_id, status FROM bookings WHERE booking_id = 'BK006';
 CALL generate_monthly_revenue_report(2025, 3);
 ```
 
+## Test Triggers
+
+```sql
+
+SHOW PROCEDURE STATUS WHERE db = 'tourgrid_copy';
+
+```
 
 
 
