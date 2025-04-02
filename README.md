@@ -655,75 +655,10 @@ DELIMITER ;
 
 ```sql
 
--- Change delimiter for stored procedures
 DELIMITER //
-
--- Create process_pending_bookings procedure
-CREATE PROCEDURE process_pending_bookings()
-BEGIN
-    DECLARE done INT DEFAULT FALSE;
-    DECLARE b_id VARCHAR(20);
-    DECLARE c_email VARCHAR(100);
-    DECLARE c_name VARCHAR(100);
-    DECLARE tour_name VARCHAR(255);
-    DECLARE tour_date DATE;
-    
-    -- Cursor for pending bookings
-    DECLARE pending_bookings CURSOR FOR
-        SELECT 
-            b.booking_id, 
-            c.email, 
-            CONCAT(c.first_name, ' ', c.last_name) AS customer_name,
-            p.location,
-            ts.start_date
-        FROM 
-            bookings b
-        JOIN 
-            customers c ON b.customer_id = c.customer_id
-        JOIN 
-            tour_schedules ts ON b.schedule_id = ts.schedule_id
-        JOIN 
-            package p ON ts.package_id = p.package_id
-        WHERE 
-            b.status = 'pending'
-            AND b.payment_status IN ('partial', 'paid');
-            
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-    
-    -- Open cursor
-    OPEN pending_bookings;
-    
-    -- Start processing
-    read_loop: LOOP
-        FETCH pending_bookings INTO b_id, c_email, c_name, tour_name, tour_date;
-        
-        IF done THEN
-            LEAVE read_loop;
-        END IF;
-        
-        -- Update booking status to confirmed
-        UPDATE bookings SET status = 'confirmed' WHERE booking_id = b_id;
-        
-        -- Here you would typically call a procedure to send email confirmation
-        -- For demonstration, we'll just log the action
-        INSERT INTO system_log (action, description) 
-        VALUES (
-            'BOOKING_CONFIRMED', 
-            CONCAT('Booking ', b_id, ' confirmed for ', c_name, ' (', c_email, ') for ', 
-                   tour_name, ' starting on ', tour_date)
-        );
-        
-    END LOOP;
-    
-    CLOSE pending_bookings;
-    
-    -- Return summary
-    SELECT 'Pending bookings processed successfully' AS result;
-END //
-
--- Create generate_monthly_revenue_report procedure
 CREATE PROCEDURE generate_monthly_revenue_report(IN report_year INT, IN report_month INT)
 BEGIN
+    -- All DECLARE statements must come first
     DECLARE done INT DEFAULT FALSE;
     DECLARE tour_location VARCHAR(255);
     DECLARE tour_category VARCHAR(50);
@@ -731,17 +666,6 @@ BEGIN
     DECLARE total_revenue DECIMAL(12,2);
     DECLARE total_travelers INT;
     
-    -- Create a temporary table to store the report
-    CREATE TEMPORARY TABLE IF NOT EXISTS monthly_revenue_report (
-        location VARCHAR(255),
-        category VARCHAR(50),
-        bookings INT,
-        travelers INT,
-        revenue DECIMAL(12,2),
-        avg_booking_value DECIMAL(12,2)
-    );
-    
-    -- Cursor for revenue data by location and category
     DECLARE revenue_cursor CURSOR FOR
         SELECT 
             p.location,
@@ -764,10 +688,18 @@ BEGIN
             
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
     
-    -- Open cursor
+    -- Now place non-declaration statements
+    CREATE TEMPORARY TABLE IF NOT EXISTS monthly_revenue_report (
+        location VARCHAR(255),
+        category VARCHAR(50),
+        bookings INT,
+        travelers INT,
+        revenue DECIMAL(12,2),
+        avg_booking_value DECIMAL(12,2)
+    );
+    
     OPEN revenue_cursor;
     
-    -- Start processing
     read_loop: LOOP
         FETCH revenue_cursor INTO tour_location, tour_category, booking_count, total_revenue, total_travelers;
         
@@ -775,7 +707,6 @@ BEGIN
             LEAVE read_loop;
         END IF;
         
-        -- Insert data into temporary table
         INSERT INTO monthly_revenue_report (
             location, 
             category, 
@@ -796,11 +727,9 @@ BEGIN
     
     CLOSE revenue_cursor;
     
-    -- Return the report
     SELECT * FROM monthly_revenue_report
     ORDER BY revenue DESC;
     
-    -- Add summary row
     SELECT 
         'TOTAL' AS location,
         '' AS category,
@@ -811,13 +740,9 @@ BEGIN
     FROM 
         monthly_revenue_report;
     
-    -- Drop the temporary table
     DROP TEMPORARY TABLE IF EXISTS monthly_revenue_report;
 END //
-
--- Reset delimiter
 DELIMITER ;
-
 ```
 
 
